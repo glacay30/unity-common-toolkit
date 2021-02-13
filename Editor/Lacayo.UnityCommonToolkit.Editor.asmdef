@@ -1,0 +1,18 @@
+{
+    "name": "Lacayo.UnityCommonToolkit.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:a34770ca210c6de409575bb6ce3e3392"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
