@@ -2,7 +2,13 @@
 
 public class ImageFillAmountSetter : MonoBehaviour
 {
-    public FloatVariable Value = null;
+    [SerializeField] private FloatVariable Value = null;
+
+    /// <summary>
+    /// Should the output be opposite of the input (i.e. in 1 = out 0)?
+    /// </summary>
+    [SerializeField] private bool Invert = false;
+
 
     private UnityEngine.UI.Image Image = null;
 
@@ -18,7 +24,11 @@ public class ImageFillAmountSetter : MonoBehaviour
         }
 
         if (Image.type == UnityEngine.UI.Image.Type.Filled) {
-            Image.fillAmount = Mathf.Clamp01(Value.Value);
+            float fill = Mathf.Clamp01(Value.Value);
+            if (Invert) {
+                fill = Mathf.Lerp(1.0f, 0.0f, Value.Value);
+            }
+            Image.fillAmount = fill;
         }
     }
 }

@@ -1,6 +1,6 @@
 {
   "name": "com.lacayo.unity-common-toolkit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "displayName": "Lacayo's Common Toolkit",
   "description": "Contains sourced or custom libraries that I have found myself including in multiple projects.",
   "author": {
