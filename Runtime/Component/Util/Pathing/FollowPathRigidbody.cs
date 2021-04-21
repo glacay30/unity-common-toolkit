@@ -16,7 +16,7 @@ public class FollowPathRigidbody : MonoBehaviour, IResettable
     [SerializeField] private bool stopAtEnd = false;
 
     private Rigidbody2D rb = null;
-    private readonly float EpsilonToTouchNode = 0.1f;
+    private readonly float EpsilonToTouchNode = 0.05f;
     private IEnumerator<Transform> nodesEnumerator = null;
 
     public void ResetToInitial()
@@ -53,7 +53,10 @@ public class FollowPathRigidbody : MonoBehaviour, IResettable
             nodesEnumerator = path.GetNextPathPoint();
             nodesEnumerator.MoveNext();
 
-            transform.position = nodesEnumerator.Current.position;
+            if (nodesEnumerator.Current != null)
+            {
+                transform.position = nodesEnumerator.Current.position;
+            }
         }
     }
 
@@ -71,22 +74,19 @@ public class FollowPathRigidbody : MonoBehaviour, IResettable
                 return;
             }
 
-            if (movementType == MovementType.ConstantSpeed) {
-                //rb.velocity = Vector2.zero;
-                var to = nodesEnumerator.Current.position;
-                var pos = transform.position;
-                var move = (to - pos).normalized;
-                rb.MovePosition(transform.position + move * Time.fixedDeltaTime * speed);
-            }
+            bool isCloseToNextNode = IsCloseToNextNode();
 
-            float sqrDistance = (transform.position - nodesEnumerator.Current.position).sqrMagnitude;
-            bool reachedNode = sqrDistance < EpsilonToTouchNode * EpsilonToTouchNode;
-
-            if (reachedNode && stopAtEnd && path.ReachedEnd()) {
+            if (isCloseToNextNode && stopAtEnd && path.ReachedEnd()) {
+                rb.MovePosition(GetNextNode());
                 return;
             }
-            else if (reachedNode) {
+            else if (isCloseToNextNode) {
                 nodesEnumerator.MoveNext();
+            }
+
+            if (movementType == MovementType.ConstantSpeed) {
+                var direction = (nodesEnumerator.Current.position - transform.position).normalized;
+                rb.MovePosition(transform.position + direction * Time.fixedDeltaTime * speed);
             }
         }
     }
@@ -99,6 +99,15 @@ public class FollowPathRigidbody : MonoBehaviour, IResettable
                 transform.position = root.position;
             }
         }
+    }
+
+    private bool IsCloseToNextNode()
+    {
+        var to = GetNextNode();
+        var from = transform.position;
+
+        float sqrDistance = (to - from).sqrMagnitude;
+        return sqrDistance < EpsilonToTouchNode * EpsilonToTouchNode;
     }
 
     private bool HasValidPath()

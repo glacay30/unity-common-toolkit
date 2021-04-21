@@ -35,11 +35,11 @@ public class MovementPath : MonoBehaviour
         while (true) {
             yield return pathSequence[moveToNodeIndex];
 
+            hasMoved = true;
+
             if (pathSequence.Count == 1) {
                 continue;
             }
-
-            hasMoved = true;
 
             moveToNodeIndex += direction;
 
@@ -90,7 +90,7 @@ public class MovementPath : MonoBehaviour
             return hasMoved && moveToNodeIndex == pathSequence.Count - 1;
         }
         else if (pathType == PathType.Loop) {
-            return hasMoved && moveToNodeIndex == 0;
+            return pathSequence.Count == 1;
         }
 
         return false;
